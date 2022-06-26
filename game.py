@@ -6,11 +6,14 @@ WIDTH = 1980
 top_left_x = 575
 top_left_y = 550
 
-background = "light grey"
 TILE_SIZE = 180
 GAP_SIZE = 40
 
-player = "o" #
+player = "o"
+
+dict_images = {0: images.a,
+               1: images.x,
+               2: images.o}
 
 height = 3
 width = 3
@@ -27,6 +30,8 @@ def on_mouse_down(pos):
     mouse_x = mouse_pos[0]
     mouse_y = mouse_pos[1]
 
+    sounds.click.play()
+
 
 class Button:
     def __init__(self,
@@ -36,9 +41,8 @@ class Button:
 
         self.index = 0
         self.image = self.design[0]
-        self.images = self.design[1]
-        self.x = self.design[2]
-        self.y = self.design[3]
+        self.x = self.design[1]
+        self.y = self.design[2]
         self.width = self.image.get_width()
         self.height = self.image.get_height()
 
@@ -55,7 +59,7 @@ class Button:
 
         if (self.x - (self.width / 2)) < mouse_x + self.width + top_left_x/TILE_SIZE < (self.x + (self.width / 2)) \
                 and (self.y - (self.height / 2)) < mouse_y + self.height + top_left_y/TILE_SIZE < (self.y + (self.height / 2)) \
-                and self.image == images.a:
+                and self.image == dict_images[0]:
             if player == "o":
                 player = "x"
             else:
@@ -65,14 +69,13 @@ class Button:
 
     def command(self):
         global comment
-        draw_rect(self.x - self.width, self.y - self.height, self.width, self.height, background, None)
 
         if player == "o":
-            self.image = images.o
+            self.image = dict_images[2]
             comment = "Player X turn."
 
         else:
-            self.image = images.x
+            self.image = dict_images[1]
             comment = "Player O turn."
 
         self.draw()
@@ -93,7 +96,7 @@ buttons = []
 for y in range(int(HEIGHT/2) - (TILE_SIZE + GAP_SIZE)*height + top_left_y, int(HEIGHT/2) + (TILE_SIZE + GAP_SIZE)*0 + top_left_y, (TILE_SIZE + GAP_SIZE)):
     buttons.append([])
     for x in range(int(WIDTH/2) - (TILE_SIZE + GAP_SIZE)*width + top_left_x, int(WIDTH/2) + (TILE_SIZE + GAP_SIZE)*0 + top_left_x, (TILE_SIZE + GAP_SIZE)):
-        buttons[len(buttons) - 1].append(Button((images.a, [], x, y))
+        buttons[len(buttons) - 1].append(Button((dict_images[0], x, y))
                        )
 
 
@@ -104,9 +107,9 @@ def read_board():
     for row in buttons:
         board.append([])
         for button in row:
-            if button.image == images.a:
+            if button.image == dict_images[0]:
                 num = 0
-            elif button.image == images.x:
+            elif button.image == dict_images[1]:
                 num = 1
             else:
                 num = 2
@@ -209,19 +212,19 @@ def check():
 
 
 def draw():
-    screen.fill(background)
+    draw_image(images.background, WIDTH, HEIGHT/2 + top_left_y - 20)
 
     for x in range(2):
-        draw_rect(top_left_x + 200*x + 270, top_left_y - 90, int(GAP_SIZE/2), 700, "white", None)
+        draw_rect(top_left_x + 200*x + 270, top_left_y - 90, int(GAP_SIZE/2), 700, "tan", None)
     for y in range(2):
-        draw_rect(top_left_x + 355, top_left_y + 210*y - 205, 700, int(GAP_SIZE/2), "white", None)
+        draw_rect(top_left_x + 355, top_left_y + 210*y - 205, 700, int(GAP_SIZE/2), "tan", None)
 
     for row in buttons:
         for button in row:
             button.draw()
             button.call()
 
-    show_text(comment, int(top_left_x/2) - 80, int(top_left_y/2) + 20, "black", 75)
+    show_text(comment, int(top_left_x/2) - 80, int(top_left_y/2) + 20, "tan", 75)
 
 
 def draw_image(image, x, y):
