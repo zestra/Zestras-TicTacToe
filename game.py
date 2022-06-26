@@ -10,7 +10,7 @@ background = "light grey"
 TILE_SIZE = 180
 GAP_SIZE = 40
 
-player = "o"
+player = "o" #
 
 height = 3
 width = 3
